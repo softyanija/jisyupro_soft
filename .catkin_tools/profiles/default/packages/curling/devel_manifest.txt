@@ -1,0 +1,5 @@
+curling
+/home/mech-user/jisyupro_ws/devel/.private/curling/cmake.lock /home/mech-user/jisyupro_ws/devel/./cmake.lock
+/home/mech-user/jisyupro_ws/devel/.private/curling/share/curling/cmake/curlingConfig.cmake /home/mech-user/jisyupro_ws/devel/share/curling/cmake/curlingConfig.cmake
+/home/mech-user/jisyupro_ws/devel/.private/curling/share/curling/cmake/curlingConfig-version.cmake /home/mech-user/jisyupro_ws/devel/share/curling/cmake/curlingConfig-version.cmake
+/home/mech-user/jisyupro_ws/devel/.private/curling/lib/pkgconfig/curling.pc /home/mech-user/jisyupro_ws/devel/lib/pkgconfig/curling.pc

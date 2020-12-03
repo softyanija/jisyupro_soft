@@ -1,0 +1,1 @@
+/home/mech-user/jisyupro_ws/devel/.private/curling/lib/pkgconfig/curling.pc
