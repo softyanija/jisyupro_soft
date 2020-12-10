@@ -1,0 +1,35 @@
+import numpy as np
+import cv2
+
+H_MARGIN = 60
+W_MARGIN = 80
+HEIGHT = 720
+WIDTH = 960
+
+img = np.full((HEIGHT + 2*H_MARGIN, WIDTH + 2*W_MARGIN, 3), 128,dtype = np.uint8)
+
+#def make_board(board):
+    
+
+
+if __name__ == '__main__':
+
+    WIN_NAME = 'GAME'
+
+    cv2.namedWindow(WIN_NAME, cv2.WINDOW_AUTOSIZE)
+    #cv2.imshow()
+
+    
+    while True:
+        cv2.rectangle(img, (50, 10), (125, 60), (255, 0, 0))
+        cv2.rectangle(img, (50, 80), (125, 130), (0, 255, 0), thickness=-1)
+        cv2.rectangle(img, (50, 150), (125, 200), (0, 0, 255), thickness=-1)
+        cv2.rectangle(img, (50, 150), (125, 200), (255, 255, 0))
+
+        cv2.imshow(WIN_NAME,img )
+        k = cv2.waitkey(1)
+         if k == 27:
+             break
+
+    cv2.destroyAllWindows()
+             
