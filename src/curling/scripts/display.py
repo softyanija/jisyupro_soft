@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 dictionary_name = cv2.aruco.DICT_4X4_50
 dictionary = cv2.aruco.getPredefinedDictionary(dictionary_name)
@@ -23,7 +23,6 @@ while True:
 
     corners, ids, rejectedImgPoints = cv2.aruco.detectMarkers(frame, dictionary)
     frame = cv2.aruco.drawDetectedMarkers(frame, corners, ids)
-
     cv2.imshow('Edited Frame', frame)
     '''
     if ids is not None:
