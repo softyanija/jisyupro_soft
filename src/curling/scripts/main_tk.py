@@ -8,6 +8,8 @@ import numpy as np
 win_width = 960+40*2
 win_height = 720+30*2
 tick = 40
+x_center = 320
+y_center = 240
 
 root = tk.Tk()
 root.title(u"curling")
@@ -35,15 +37,25 @@ def getmarkers(ids, corners):
             v = np.mean(corners[i][0],axis=0)
             arr = np.append(arr, np.array([[id[0], v[0], v[1]]]), axis=0)
             #print([id[0], v[0], v[1]])
-    print(arr)
+    #print(arr)
+    return arr
 
+#石の座標の配列を取得しソートして、画面に表示
+def show_stones(arr, x, y):#(x,y)は左上の座標
+    center = np.array([x,y])
+    buf_r = np.array([np.linalg.norm(arr[:,1:3] - center,axis = 1)]).reshape([arr.shape[0],1])
+    buf_i = arr[:,0].reshape([arr.shape[0],1])
+    ans = np.append(buf_i,buf_r,axis = 1)
+    return ans
     
 #ゲームのメインループ
 def gameloop():
     global dictionary, cap
     ret, frame = cap.read()
     corners, ids, rejectedImgPoints = cv2.aruco.detectMarkers(frame, dictionary)
-    getmarkers(ids, corners)
+    stones = getmarkers(ids, corners)
+    stones = show_stones(stones,320, 240)
+    print(stones)
     root.after(tick, gameloop) #50ミリ秒経過後、ループの最初に戻る
 
     
