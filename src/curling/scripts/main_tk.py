@@ -17,7 +17,7 @@ root.geometry("1040x780")
 display = tk.Canvas(root, width = win_width, height = win_height)
 display.pack() #パック
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 dictionary_name = cv2.aruco.DICT_4X4_50
 dictionary = cv2.aruco.getPredefinedDictionary(dictionary_name)
@@ -28,40 +28,72 @@ dictionary = cv2.aruco.getPredefinedDictionary(dictionary_name)
 #枠組みを作る
 def init():
     display.create_rectangle(40, 30, 40+640, 30+480,tag = "board")
+    display.create_text(30, 40, text = "   ", font = ('FixedSys', 16), tag = "score")
     
 #石の座標を取得
 def getmarkers(ids, corners):
     arr = np.empty((0,3))
     if ids is not None:
         for i, id in enumerate(ids):
-            v = np.mean(corners[i][0],axis=0)
-            arr = np.append(arr, np.array([[id[0], v[0], v[1]]]), axis=0)
-            #print([id[0], v[0], v[1]])
+            if i < 20:
+                v = np.mean(corners[i][0],axis=0)
+                arr = np.append(arr, np.array([[id[0], v[0], v[1]]]), axis=0)
     #print(arr)
     return arr
 
-#石の座標の配列を取得しソートして、画面に表示
-def show_stones(arr, x, y):#(x,y)は左上の座標
-    center = np.array([x,y])
+#石の座標の配列を取得しソート
+def sort_stones(arr):
+    center = np.array([x_center,y_center])
     buf_r = np.array([np.linalg.norm(arr[:,1:3] - center,axis = 1)]).reshape([arr.shape[0],1])
     buf_i = arr[:,0].reshape([arr.shape[0],1])
     ans = np.append(buf_i,buf_r,axis = 1)
+    ans = ans[np.argsort(ans[:,1])]
     return ans
+
+#盤面に石を表示、(x,y)は左上の座標
+def board_stones(arr,x,y):
+    r = 10
+    display.delete("stones")
+    if arr.any():
+        for i in arr:
+            display.create_oval(x+i[1]-r,y+i[2]+r,x+i[1]+r,y+i[2]-r,fill=str(id2color(i[0])), tag = "stones")
     
+def show_stones(arr,x,y):#x,yは左上の座標
+    d1 = 80
+    d2 = 100 + d1
+    display.delete("score")
+    display.create_text(x, y, text = 'Rank', font = ('FixedSys', 20), tag = "score")
+    display.create_text(x+d1, y, text = 'ID', font = ('FixedSys', 20), tag = "score")
+    display.create_text(x+d2, y, text = 'Distance', font = ('FixedSys', 20), tag = "score")
+    for i, st in enumerate(arr):
+        display.create_text(x, y+40*(i+1), text = str(i+1), font = ('FixedSys', 20), tag = "score")
+        display.create_text(x+d1, y+40*(i+1), text = str(int(st[0])), font = ('FixedSys', 20), tag = "score")
+        display.create_text(x+d2, y+40*(i+1), text = str(int(st[1])), font = ('FixedSys', 20), tag = "score")
+        
+def id2color(id):
+    if id//10:
+        return 'blue'
+    else:
+        return 'red'
+    
+
+
 #ゲームのメインループ
 def gameloop():
-    global dictionary, cap
+    global dictionary, cap, test
     ret, frame = cap.read()
     corners, ids, rejectedImgPoints = cv2.aruco.detectMarkers(frame, dictionary)
     stones = getmarkers(ids, corners)
-    stones = show_stones(stones,320, 240)
-    print(stones)
+    s_stones = sort_stones(test)
+    board_stones(test,40,30)
+    show_stones(s_stones,760,40)
+    print(s_stones)
     root.after(tick, gameloop) #50ミリ秒経過後、ループの最初に戻る
 
     
 #メイン部分
 init()
-
+test = np.array([[0, 380, 320],[1, 320, 240],[2, 100, 240],[10, 50, 240],[11, 160, 270],[12, 170, 360]])
 #ゲームのメインループ
 gameloop()
 root.mainloop() #画面の表示
