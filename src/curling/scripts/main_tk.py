@@ -25,13 +25,30 @@ dictionary = cv2.aruco.getPredefinedDictionary(dictionary_name)
 
 
 
+#
+def camera_init():
+    global cap
+    
+    while True:
+        ret, frame = cap.read()
+        frame = cv2.resize(frame, (int(2*frame.shape[1]), int(2*frame.shape[0])))
+        cv2.putText(frame, 'Please set marker', (140, 80), cv2.FONT_HERSHEY_COMPLEX, 3, (255, 255, 255), 5, cv2.LINE_AA)
+        cv2.putText(frame, 'End : Space', (350,180), cv2.FONT_HERSHEY_COMPLEX, 3, (255, 255, 255), 5, cv2.LINE_AA)
+        cv2.drawMarker(frame, (640,480), (0,0,255), markerType=cv2.MARKER_CROSS, markerSize=60, thickness=1, line_type=cv2.LINE_8)
+        cv2.imshow('Camera Initialize', frame)
+        
+        k = cv2.waitKey(1)
+        if k == 32:
+            break
 
 #枠組みを作る
-def init():
+def make_board():
     display.create_rectangle(40, 30, 40+640, 30+480,tag = "board")
     display.create_text(30, 40, text = "   ", font = ('FixedSys', 16), tag = "score")
     btn = tk.Button(display, text='判定', command = end_game)
     btn.place(x = 800, y = 550)
+    btn2 = tk.Button(display, text='終了', command = root.destroy)
+    btn2.place(x = 800, y = 700)
     
 #石の座標を取得
 def getmarkers(ids, corners):
@@ -112,7 +129,9 @@ def gameloop():
 
     
 #メイン部分
-init()
+camera_init()
+cv2.destroyAllWindows()
+make_board()
 test = np.array([[0, 380, 320],[1, 320, 240],[2, 100, 240],[10, 50, 240],[11, 160, 270],[12, 170, 360]])
 #ゲームのメインループ
 gameloop()
