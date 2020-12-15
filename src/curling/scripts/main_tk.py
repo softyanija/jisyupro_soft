@@ -10,6 +10,7 @@ win_height = 720+30*2
 tick = 40
 x_center = 320
 y_center = 240
+win = 2 #勝敗判定用のフラグ
 
 root = tk.Tk()
 root.title(u"curling")
@@ -29,6 +30,8 @@ dictionary = cv2.aruco.getPredefinedDictionary(dictionary_name)
 def init():
     display.create_rectangle(40, 30, 40+640, 30+480,tag = "board")
     display.create_text(30, 40, text = "   ", font = ('FixedSys', 16), tag = "score")
+    btn = tk.Button(display, text='判定', command = end_game)
+    btn.place(x = 800, y = 550)
     
 #石の座標を取得
 def getmarkers(ids, corners):
@@ -76,15 +79,32 @@ def id2color(id):
     else:
         return 'red'
     
+def winner(arr):
+    global win
+    if not arr.any():
+        return 2
+    else:
+        return arr[0][0]//10
 
+    
+def end_game():
+    global win
+    if win == 0:
+        display.create_text(360, 550, text = 'Red Win!', font = ('FixedSys', 40), tag = "winner")
+    elif win == 1:
+        display.create_text(360, 550, text = 'Blue Win!', font = ('FixedSys', 40), tag = "winner")
+    else:
+        display.create_text(360, 550, text = 'Draw', font = ('FixedSys', 40), tag = "winner")
+    
 
 #ゲームのメインループ
 def gameloop():
-    global dictionary, cap, test
+    global dictionary, cap, test, win
     ret, frame = cap.read()
     corners, ids, rejectedImgPoints = cv2.aruco.detectMarkers(frame, dictionary)
     stones = getmarkers(ids, corners)
     s_stones = sort_stones(test)
+    win = winner(s_stones)
     board_stones(test,40,30)
     show_stones(s_stones,760,40)
     print(s_stones)
