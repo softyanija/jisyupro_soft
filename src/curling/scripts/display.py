@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 dictionary_name = cv2.aruco.DICT_4X4_50
 dictionary = cv2.aruco.getPredefinedDictionary(dictionary_name)

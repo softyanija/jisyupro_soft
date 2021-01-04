@@ -10,7 +10,7 @@ import pygame
 from pygame.locals import *
 import time
 
-angle1 = 180
+angle1 = 0
 angle2 = 90
 
 class joyconController:
@@ -32,7 +32,7 @@ class joyconController:
         # ボタンのカウントと速度の係数
         self.button_cnt = 0
         self.motor1 = 10
-        self.motor2 = 10
+        self.motor2 = 2
 
         motor_angle1 = UInt16()
         motor_angle1.data = angle1
@@ -73,35 +73,30 @@ class joyconController:
             elif e.type == pygame.locals.JOYBUTTONDOWN:
                 self.button_cnt += 1
                 if e.button==2:#左
-                    angle1 += self.motor1
+                    angle1 += 0
                 elif e.button==1:#右
-                    angle1 -= self.motor1
+                    angle1 -= 0
                 elif e.button==0:#下
                     angle1 = 0
                 elif e.button==3:#上
-                    angle1 = 140
+                    angle1 = 20
                     motor_angle1.data = angle1
                     self.motor_angle1_pub.publish(motor_angle1)
-                    rospy.sleep(2)
-
-                    angle2 = 0
-                    motor_angle2.data = angle2
-                    self.motor_angle2_pub.publish(motor_angle2)
                     rospy.sleep(1)
                     
-                    angle1 = 180
+                    angle1 = 0
                     self.motor_angle1_pub.publish(motor_angle1)
-        angle1 -= self.motor1*self.joystickx
-        angle2 -= self.motor2*self.joysticky
+        #angle1 -= self.motor1*self.joystickx
+        angle2 -= self.motor2*self.joystickx
         if angle1 < 0:
             angle1 = 0
-        elif angle1 > 180:
-            angle1 = 180
+        elif angle1 > 20:
+            angle1 = 20
 
-        if angle2 < 0:
+        if angle2 < 40:
             angle2 = 0
-        elif angle2 > 180:
-            angle2 = 180
+        elif angle2 > 140:
+            angle2 = 140
             
         motor_angle1.data = angle1
         motor_angle2.data = angle2
