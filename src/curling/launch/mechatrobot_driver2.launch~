@@ -4,6 +4,4 @@
   <!-- run rosserial node -->
   <node pkg="rosserial_python" type="serial_node.py" name="serial_node"
         args="$(arg port)" output="screen" />
-  <node pkg="curling" type="motor-joycon-2p.py" name="motor_joycon_2p" />
-  <node pkg="curling" type="curling.py" name="curling" />
 </launch>
